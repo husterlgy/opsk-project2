@@ -8,7 +8,8 @@ import numpy as np
 import pandas as pd
 import scipy 
 from collections import Counter
-
+import matplotlib.pyplot as plt
+from gps2dist import gps2dist
 
 data = pd.read_csv('data.csv')
 data = data.sort_values(by = 'flightICAO24')
@@ -31,9 +32,41 @@ for key in flightID.keys():
     for sensor in sensor_ID.keys():
         temp_dict[sensor] = temp_pd.iloc[np.where(temp_pd['senserNumber'] == sensor)]
     flight_RSSI[key] = temp_dict
-del key,temp_pd,temp_dict,sensor_ID
+del key,sensor,temp_pd,temp_dict,sensor_ID,idx_with_rssi#delete temp parameters
 
 '''flight_RSSI->{flightICAO->{sensorID->flight_data}}'''
+
+
+'''preliminary colleration analysis of RSSI and positon'''
+
+
+temp_pd = flight_RSSI['06a19f'][13020201]
+temp_pd = temp_pd.sort_values('TimeAtServer')
+
+dist = gps2dist(temp_pd)#unit:m
+dist = dist/1000
+
+rssi = temp_pd['gpsRSSI']
+rssi = np.array(rssi)
+
+from rssi_preprocessing import rssi_preprocessing
+
+plt.plot(dist)
+plt.plot(rssi)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
