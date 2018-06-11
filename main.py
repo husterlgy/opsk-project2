@@ -40,7 +40,7 @@ del key,sensor,temp_pd,temp_dict,sensor_ID,idx_with_rssi#delete temp parameters
 '''preliminary colleration analysis of RSSI and positon'''
 
 
-temp_pd = flight_RSSI['06a19f'][13020201]
+temp_pd = flight_RSSI['4690f0'][13020203]
 temp_pd = temp_pd.sort_values('TimeAtServer')
 
 dist = gps2dist(temp_pd)#unit:m
@@ -49,11 +49,22 @@ dist = dist/1000
 rssi = temp_pd['gpsRSSI']
 rssi = np.array(rssi)
 
-from rssi_preprocessing import rssi_preprocessing
+#from rssi_preprocessing import rssi_preprocessing
 
+
+width = 40
+aa = temp_pd['gpsRSSI'].rolling(width).mean()
+aa = np.array(aa)
+for ii in range(width):
+#    aa[ii] = temp_pd['gpsRSSI'].iloc[ii]
+    aa[ii] = aa[width:-1].mean()
+
+
+dist = (dist - dist.min())/(dist.max() - dist.min())
+aa = (aa - aa.min())/(aa.max() - aa.min())
+dist = dist*dist
 plt.plot(dist)
-plt.plot(rssi)
-
+plt.plot(aa)
 
 
 
