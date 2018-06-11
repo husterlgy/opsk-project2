@@ -23,9 +23,17 @@ for key in flightID.keys():
     if(flightID[key]<300):
          del flightID[key]
 
+flight_RSSI = {}
+for key in flightID.keys():
+    temp_pd = data_with_rssi.iloc[np.where(data_with_rssi['flightICAO24'] == key)]
+    sensor_ID = Counter(temp_pd['senserNumber'])
+    temp_dict = {}
+    for sensor in sensor_ID.keys():
+        temp_dict[sensor] = temp_pd.iloc[np.where(temp_pd['senserNumber'] == sensor)]
+    flight_RSSI[key] = temp_dict
+del key,temp_pd,temp_dict,sensor_ID
 
-
-
+'''flight_RSSI->{flightICAO->{sensorID->flight_data}}'''
 
 
 
